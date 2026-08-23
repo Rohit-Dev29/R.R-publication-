@@ -82,6 +82,19 @@
   }
   nav.links a:hover{background:rgba(30,34,36,.06);}
   .menu-btn{display:none; background:none; border:1px solid var(--ink); border-radius:4px; width:38px; height:38px; align-items:center; justify-content:center; cursor:pointer;}
+  .visitor-count{
+    display:flex; align-items:center; gap:7px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);
+    border:1px solid rgba(30,34,36,.22); border-radius:20px; padding:6px 12px 6px 10px;
+    letter-spacing:.03em; white-space:nowrap; background:rgba(30,34,36,.02);
+  }
+  .visitor-count .eye-icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:15px; height:15px; flex-shrink:0;
+  }
+  .visitor-count .eye-icon svg{width:100%; height:100%; display:block;}
+  .visitor-count #visitorNum{color:var(--ink); font-weight:600;}
+  .visitor-count .vc-label{text-transform:uppercase; font-size:9.5px; letter-spacing:.1em; color:var(--ink-soft);}
 
   /* ===== HERO — exam answer-booklet cover ===== */
   .hero-outer{max-width:1140px; margin:40px auto 0; padding:0 24px;}
@@ -324,6 +337,8 @@
   @media(max-width:860px){
     nav.links{display:none;}
     .menu-btn{display:flex;}
+    .visitor-count{padding:5px 10px 5px 8px; font-size:11px;}
+    .visitor-count .vc-label{display:none;}
     .subject-grid{grid-template-columns:1fr;}
     .about-wrap{grid-template-columns:1fr;}
     .hero-title{font-size:32px;}
@@ -351,6 +366,16 @@
       <a href="#chemistry">Chemistry</a>
       <a href="#about">About</a>
     </nav>
+    <div class="visitor-count" id="visitorCount" title="Total site visits">
+      <span class="eye-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.6"/>
+        </svg>
+      </span>
+      <span class="vc-label">Visits</span>
+      <span id="visitorNum">&mdash;</span>
+    </div>
     <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
   </div>
 </header>
@@ -8046,6 +8071,20 @@
       nav.style.boxShadow='0 8px 20px -8px rgba(0,0,0,.25)';
     }
   });
+
+  // Visitor counter (persistent, real count via a free counting API)
+  (function(){
+    const numEl = document.getElementById('visitorNum');
+    if(!numEl) return;
+    fetch('https://api.countapi.xyz/hit/rr-publication-bsc-portal/site-visits')
+      .then(r => r.json())
+      .then(data => {
+        numEl.textContent = data.value.toLocaleString();
+      })
+      .catch(() => {
+        numEl.textContent = '—';
+      });
+  })();
 </script>
 
 </body>
