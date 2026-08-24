@@ -8076,10 +8076,11 @@
   (function(){
     const numEl = document.getElementById('visitorNum');
     if(!numEl) return;
-    fetch('https://api.countapi.xyz/hit/rr-publication-bsc-portal/site-visits')
+    fetch('https://countapi.mileshilliard.com/api/v1/hit/rr-publication-bsc-portal-visits')
       .then(r => r.json())
       .then(data => {
-        numEl.textContent = data.value.toLocaleString();
+        const n = Number(data.value);
+        numEl.textContent = isNaN(n) ? data.value : n.toLocaleString();
       })
       .catch(() => {
         numEl.textContent = '—';
